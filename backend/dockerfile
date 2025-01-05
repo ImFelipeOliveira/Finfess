@@ -1,4 +1,6 @@
-FROM python:3.12.8-alpine
+FROM python:3.12-alpine
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
@@ -21,9 +23,13 @@ COPY ./poetry.lock /app/
 
 RUN poetry install --no-dev --no-interaction --no-ansi
 
-COPY . ./app
+COPY . /app
+
+COPY ./scripts /scripts
+RUN chmod +x /scripts/*
 
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
 
-CMD ["poetry", "run", "python", "app/src/manage.py", "runserver", "0:8080"]
+
+CMD ["sh", "scripts/init.sh"]
