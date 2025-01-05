@@ -1,0 +1,29 @@
+services:
+  frontend:
+    build:
+      context: ./frontend/
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./frontend:/app"
+  django:
+    build:
+      context: ./backend/
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./backend:/app"
+    command: sh -c "cd /app && poetry run python /app/src/manage.py makemigrations && poetry run python /app/src/manage.py migrate && poetry run python /app/src/manage.py collectstatic --noinput && poetry run python /app/src/manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+    restart: on-failure
+  db:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./backend/src/data/db:/var/lib/postgresql/data
+    env_file:
+      - ./backend/.env

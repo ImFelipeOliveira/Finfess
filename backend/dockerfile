@@ -1,0 +1,29 @@
+FROM python:3.12.8-alpine
+
+WORKDIR /app
+
+RUN apk add --no-cache \
+    python3-dev \
+    gcc \
+    postgresql-dev \
+    libffi-dev \
+    libtool \
+    build-base
+
+RUN pip install --upgrade pip && \
+    pip install pipx && \
+    pipx install poetry
+
+ENV PATH="/root/.local/bin:$PATH"
+
+COPY ./pyproject.toml /app/
+COPY ./poetry.lock /app/
+
+RUN poetry install --no-dev --no-interaction --no-ansi
+
+COPY . ./app
+
+RUN mkdir -p /vol/web/media
+RUN mkdir -p /vol/web/static
+
+CMD ["poetry", "run", "python", "app/src/manage.py", "runserver", "0:8080"]

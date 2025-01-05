@@ -1,0 +1,73 @@
+[tool.poetry]
+name = "finfess"
+version = "0.1.0"
+description = ""
+authors = ["Felipe Oliveira <flipeaz342@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.1.4"
+djangorestframework = "^3.15.2"
+django-filter = "^24.3"
+markdown = "^3.7"
+psycopg2-binary = "^2.9.10"
+djangorestframework-simplejwt = "^5.3.1"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.4"
+pytest-django = "^4.9.0"
+pytest-cov = "^6.0.0"
+
+
+[tool.poetry.group.dev.dependencies]
+docker = "^7.1.0"
+ruff = "^0.8.5"
+django-types = "^0.20.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "athenas.settings"
+
+[tool.ruff]
+src=["src"]
+
+[tool.ruff.lint]
+select = [    
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+ignore = ["E501", "N818", "E203"]
+
+[tool.ruff.lint.isort.sections]
+"django" = ["django"]
+"drf" = ["rest_framework"]
+
+[tool.ruff.lint.isort]
+section-order = [
+    "django",
+    "drf",
+]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+
+# Adiciona atalhos do taskipy
